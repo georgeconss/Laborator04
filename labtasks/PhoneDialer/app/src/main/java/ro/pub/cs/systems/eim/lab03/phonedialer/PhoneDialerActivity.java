@@ -16,14 +16,19 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.GridLayout;
 import android.widget.ImageButton;
+import android.widget.Toast;
 
 public class PhoneDialerActivity extends AppCompatActivity {
+
+    final public static int CONTACTS_MANAGER_REQUEST_CODE = 2022;
+
+    private EditText phoneNumberEditText;
 
     private final ButtonClickListener buttonClickListener = new ButtonClickListener();
     private class ButtonClickListener implements View.OnClickListener {
         @Override
         public void onClick(View view) {
-            EditText phoneNumberEditText = (EditText)findViewById(R.id.phone_number_edit_text);
+            phoneNumberEditText = (EditText)findViewById(R.id.phone_number_edit_text);
             String phoneNumber = phoneNumberEditText.getText().toString();
             phoneNumber += ((Button)view).getText().toString();
             phoneNumberEditText.setText(phoneNumber);
@@ -34,7 +39,6 @@ public class PhoneDialerActivity extends AppCompatActivity {
     private class ImageButtonClickListener implements View.OnClickListener {
         @Override
         public void onClick(View view) {
-            EditText phoneNumberEditText = (EditText)findViewById(R.id.phone_number_edit_text);
             int id = ((ImageButton)view).getId();
             if (id == R.id.backspace) {
                 String phoneNumber = phoneNumberEditText.getText().toString();
@@ -57,6 +61,17 @@ public class PhoneDialerActivity extends AppCompatActivity {
                 }
             } else if (id == R.id.button_hangup) {
                 finish();
+            } else if (id == R.id.button_contacts) {
+                String phoneNumber = phoneNumberEditText.getText().toString();
+                if (phoneNumber.length() > 0) {
+                    Intent intent = new Intent("ro.pub.cs.systems.eim.lab04." +
+                            "contactsmanager.intent.action.ContactsManagerActivity");
+                    intent.putExtra("ro.pub.cs.systems.eim.lab04." +
+                            "contactsmanager.PHONE_NUMBER_KEY", phoneNumber);
+                    startActivity(intent);
+                } else {
+                    Toast.makeText(getApplication(), getResources().getString(R.string.phone_error), Toast.LENGTH_LONG).show();
+                }
             }
         }
     }
@@ -66,6 +81,7 @@ public class PhoneDialerActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.phone_dialer);
+        phoneNumberEditText = (EditText)findViewById(R.id.phone_number_edit_text);
 
         GridLayout gridLayout = (GridLayout)findViewById(R.id.grid_layout);
         setAllButtonListener(gridLayout);

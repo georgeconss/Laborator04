@@ -12,6 +12,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 
@@ -55,6 +56,16 @@ public class ContactsManagerActivity extends AppCompatActivity {
         additionalFieldsButton.setOnClickListener(buttonOnClickListener);
         saveButton.setOnClickListener(buttonOnClickListener);
         cancelButton.setOnClickListener(buttonOnClickListener);
+
+        Intent intent = getIntent();
+        if (intent != null) {
+            String phone = intent.getStringExtra("ro.pub.cs.systems.eim.lab04.contactsmanager.PHONE_NUMBER_KEY");
+            if (phone != null) {
+                phoneEditText.setText(phone);
+            } else {
+                Toast.makeText(this, getResources().getString(R.string.phone_error), Toast.LENGTH_LONG).show();
+            }
+        }
     }
 
     final private ButtonOnClickListener buttonOnClickListener = new ButtonOnClickListener();
@@ -118,7 +129,6 @@ public class ContactsManagerActivity extends AppCompatActivity {
                 intent.putParcelableArrayListExtra(ContactsContract.Intents.Insert.DATA, contactData);
                 startActivity(intent);
             } else if (id == R.id.cancel_button) {
-                setResult(Activity.RESULT_CANCELED, new Intent());
                 finish();
             }
         }

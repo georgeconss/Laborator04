@@ -12,4 +12,5 @@
     <string name="company">Company</string>
     <string name="website">Website</string>
     <string name="im">IM</string>
+    <string name="phone_error">No phone number!</string>
 </resources>
